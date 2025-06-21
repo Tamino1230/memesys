@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeSys</title>
+    <meta property="og:title" content="MemeSys">
+    <meta property="og:description" content="An image shared via MemeSys.">
+    <meta property="og:image" content="">
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="upload-container">
+            <h1>MemeSys</h1>
+            <p>Share images instantly. Drag & drop or click to upload.</p>
+            <div class="upload-area" id="upload-area">
+                <p>Drop your image here</p>
+            </div>
+            <input type="file" id="image-input" accept="image/*">
+            <div class="button-group" id="action-buttons">
+                <button id="generate-link-button">Generate Link</button>
+                <button id="save-html-button">Save as HTML</button>
+            </div>
+            <div id="progress-container" style="display: none;">
+                <p>Processing image...</p>
+                <progress id="progress-bar" value="0" max="100"></progress>
+                <span id="progress-percent">0%</span>
+                <button id="cancel-button">Cancel</button>
+            </div>
+            <div id="link-container" style="display: none;">
+                <p>Your shareable link is ready:</p>
+                <input type="text" id="share-link" readonly>
+                <button id="copy-button">Copy</button>
+            </div>
+        </div>
+        <div id="image-view-container" style="display: none;">
+            <img id="meme-image" src="" alt="Meme">
+            <br>
+            <a href="/">Upload another one</a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="src/script.js"></script>
+</body>
+</html>
