@@ -14,6 +14,8 @@ const cancelButton = document.getElementById('cancel-button');
 const actionButtons = document.getElementById('action-buttons');
 const generateLinkButton = document.getElementById('generate-link-button');
 const saveHtmlButton = document.getElementById('save-html-button');
+const uploadAnotherButton = document.getElementById('upload-another-button');
+const downloadPngButton = document.getElementById('download-png-button');
 
 let fileReader = null;
 
@@ -122,7 +124,6 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 #image-view-container {
     padding: 2rem;
 }
@@ -141,6 +142,28 @@ a {
 }
 a:hover {
     color: #0077cc;
+}
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+button {
+    background: linear-gradient(135deg, #00aaff, #0077cc);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3);
+}
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
 }`;
                 const htmlContent = `
 <!DOCTYPE html>
@@ -157,10 +180,24 @@ a:hover {
     <div class="container">
         <div id="image-view-container" style="display: block;">
             <img id="meme-image" src="${fileData}" alt="Meme">
+            <div class="button-group">
+                <button id="download-png-button">Download as PNG</button>
+            </div>
             <br>
-            <a href="https://tamino1230.github.io/memesys">Upload another one</a>
+            <a href="${window.location.href.split('#')[0]}">Create your own</a>
         </div>
     </div>
+    <script>
+        document.getElementById('download-png-button').addEventListener('click', () => {
+            const image = document.getElementById('meme-image');
+            const a = document.createElement('a');
+            a.href = image.src;
+            a.download = 'image.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    <\/script>
 </body>
 </html>`;
                 const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -205,6 +242,19 @@ cancelButton.addEventListener('click', () => {
 copyButton.addEventListener('click', () => {
     shareLink.select();
     document.execCommand('copy');
+});
+
+uploadAnotherButton.addEventListener('click', () => {
+    window.location.href = window.location.href.split('#')[0];
+});
+
+downloadPngButton.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = memeImage.src;
+    a.download = 'image.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 });
 
 window.addEventListener('load', () => {
