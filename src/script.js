@@ -158,7 +158,7 @@ a:hover {
         <div id="image-view-container" style="display: block;">
             <img id="meme-image" src="${fileData}" alt="Meme">
             <br>
-            <a href="${window.location.href.split('#')[0]}">Upload another one</a>
+            <a href="https://tamino1230.github.io/memesys">Upload another one</a>
         </div>
     </div>
 </body>
