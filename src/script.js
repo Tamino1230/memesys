@@ -88,7 +88,9 @@ function processImage(outputType) {
         setTimeout(() => {
             const fileData = fileReader.result;
             const base64String = fileData.split(',')[1];
-            const compressed = pako.deflate(base64String);
+            // Use TextEncoder to encode base64 string to Uint8Array
+            const base64Bytes = new TextEncoder().encode(base64String);
+            const compressed = pako.deflate(base64Bytes);
             const CHUNK_SIZE = 0x8000;
             let binaryString = '';
             for (let i = 0; i < compressed.length; i += CHUNK_SIZE) {
@@ -265,9 +267,25 @@ window.addEventListener('load', () => {
         uploadContainer.style.display = 'none';
         imageViewContainer.style.display = 'block';
         const encoded = hash.substring(7);
-        const compressed = new Uint8Array(atob(encoded).split('').map(c => c.charCodeAt(0)));
-        const base64String = pako.inflate(compressed, { to: 'string' });
-        const imageSrc = 'data:image;base64,' + base64String;
+        // Decode base64 to Uint8Array
+        const binaryString = atob(encoded);
+        const compressed = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            compressed[i] = binaryString.charCodeAt(i);
+        }
+        // Inflate to Uint8Array, then decode to string
+        const base64Bytes = pako.inflate(compressed);
+        const base64String = new TextDecoder().decode(base64Bytes);
+        // Try to detect image type from base64 header
+        let mime = 'image/png';
+        if (base64String.startsWith('iVBOR')) mime = 'image/png';
+        else if (base64String.startsWith('/9j/')) mime = 'image/jpeg';
+        else if (base64String.startsWith('R0lGOD')) mime = 'image/gif';
+        else if (base64String.startsWith('Qk')) mime = 'image/bmp';
+        else if (base64String.startsWith('SUkq')) mime = 'image/tiff';
+        else if (base64String.startsWith('UklGR')) mime = 'image/webp';
+        else if (base64String.startsWith('AAABAAE')) mime = 'image/x-icon';
+        const imageSrc = `data:${mime};base64,${base64String}`;
         memeImage.src = imageSrc;
         if (ogImage) {
             ogImage.setAttribute('content', imageSrc);
